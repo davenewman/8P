@@ -16,6 +16,5 @@ u(i) = f(i)/a(i);
 for k = length(f) - 1:-1:1
     u(k) = (1/a(k))*(f(k) - c(k)*u(k+1));
 end
-
 end
 
