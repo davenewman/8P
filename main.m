@@ -1,10 +1,10 @@
 clear;
 clc;
+close all;
 
 % nx and nt are the number of interior x points and t points, respectively
-
-nx = 10;
-nt = 10;
+nx = 3;
+nt = 3;
 
 L = pi;
 D = 0.1;
@@ -33,12 +33,12 @@ u(:,1) = g0;
 u(:,end) = gL;
 u(1,:) = f;
 
-f_right_side = CreateRightSide(u(1,:),lambda,g0,gL);
+f_right_side = CreateRightSide(u(1,2:nx+1),lambda,g0(1),gL(1))
 
 % now we build the diagonal vectors with which we will solve the system
 % here, "a" refers to the main diagonal, "b" refers to the lower diagonal,
 % and "c" refers to the upper diagonal
-a = (1-lambda)*ones(1,nx);
+a = (1+lambda)*ones(1,nx);
 b = -0.5*lambda*ones(1,nx-1);
 c = -0.5*lambda*ones(1,nx-1);
 
@@ -50,6 +50,15 @@ for i = 2:length(t)
     
     % and now we update the right hand side of the equation for the next
     % time step
-    f_right_side = CreateRightSide(u(i,:),lambda,g0,gL);
+    f_right_side = CreateRightSide(u(i,2:nx+1),lambda,g0(i),gL(i));
 end
   
+%checking against analytical solution
+[X,Y] = meshgrid(x,t);
+u_exact = exp(-D*(k^2)*Y).*sin(k*X);
+figure;
+surf(X,Y,u_exact);
+xlabel('x'),ylabel('t');
+figure;
+surf(X,Y,u);
+xlabel('x'),ylabel('t');
