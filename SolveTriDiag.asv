@@ -1,0 +1,19 @@
+function [ u ] = SolveTriDiag(a,b,c,f)
+%This function solves the tri-diagonal systems directly using the Thomas
+%algorithm. "a" refers to the main diagonal, "b" refers to the lower
+%diagonal, and "c" refers to the upper diagonal. "f" is the known right
+%hand side. All inputs are in the form of vectors.
+
+for i = 2:length(f)-1
+    a(i) = a(i) - (1/a(i-1))*b(i-1)*c(i-1);
+    f(i) = f(i) - (1/a(i-1))*b(i-1)*f(i-1);
+end
+
+u(i+1) = f(i+1)/
+
+
+
+
+
+end
+
