@@ -1,3 +1,4 @@
+% solves problem 2
 clear;
 clc;
 close all;
@@ -9,7 +10,6 @@ nt = 10;
 L = pi;
 D = 0.1;
 T = 10;
-F = 0;
 
 % equivalent to L/(n+1)
 x = linspace(0,L,nx+2);
@@ -34,7 +34,12 @@ u(:,1) = g0;
 u(:,end) = gL;
 u(1,:) = f;
 
-f_right_side = CreateRightSide(u(1,2:nx+1),lambda,g0(1),gL(1))
+w = 1;
+F_func = @(x,t) (w*cos(w*t) + D*k^2*sin(wt))*cos(k*x);
+
+F = F_func(x,t(1));
+
+f_right_side = CreateRightSide2(u(1,2:nx+1),lambda,g0(1),gL(1),F,deltaT)
 
 % now we build the diagonal vectors with which we will solve the system
 % here, "a" refers to the main diagonal, "b" refers to the lower diagonal,
@@ -51,7 +56,8 @@ for i = 2:length(t)
     
     % and now we update the right hand side of the equation for the next
     % time step
-    f_right_side = CreateRightSide(u(i,2:nx+1),lambda,g0(i),gL(i));
+    F = F_func(x,t(i));
+    f_right_side = CreateRightSide2(u(i,2:nx+1),lambda,g0(i),gL(i),F);
 end
   
 %checking against analytical solution
