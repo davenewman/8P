@@ -3,44 +3,23 @@ clear;
 clc;
 close all;
 
-% nx and nt are the number of interior x points and t points, respectively
-nx = 10;
-nt = 100;
+% Parameters is for problem 1, Parameters2 is for problem 2.
+% uncomment the necessary line to solve the problem you wish.
 
-L = pi;
-D = 0.1;
-T = 10;
-w = 10;
-k = 1;
+[L,D,T,F_func,f,w,k,x,t,deltaT,lambda,g0,gL,nx,nt,X,Y,u_exact] = Parameters();
+%[L,D,T,F_func,f,w,k,x,t,deltaT,lambda,g0,gL,nx,nt,X,Y,u_exact] = Parameters2();
 
-% equivalent to L/(n+1)
-x = linspace(0,L,nx+2);
-t = linspace(0,T,nt+2);
-deltaT = t(2) - t(1);
-
-lambda = D*deltaT/((x(2)-x(1))^2);
-
-%initialize empty solution array u
+% initialize empty solution array u (preallocate)
 u = zeros(length(t),length(x));
 
-% initial condition
-f = 0*ones(1,length(x));
-
-
-% boundary conditions
-g0 = sin(w*t);
-gL = sin(w*t)*cos(k*L);
-
-% arrange the grid with the boundary conditions
+% arrange the solution grid with the boundary conditions
 u(:,1) = g0;
 u(:,end) = gL;
 u(1,:) = f;
 
-
-F_func = @(x,t) (w*cos(w*t) + D*k^2*sin(w*t))*cos(k*x);
+% create initial right hand side with which to solve
 F = F_func(x(2:length(x)-1),t(1));
-
-f_right_side = CreateRightSide2(u(1,2:nx+1),lambda,g0(1),gL(1),F,deltaT)
+f_right_side = CreateRightSide2(u(1,2:nx+1),lambda,g0(1),gL(1),F,deltaT);
 
 % now we build the diagonal vectors with which we will solve the system
 % here, "a" refers to the main diagonal, "b" refers to the lower diagonal,
@@ -60,13 +39,6 @@ for i = 2:length(t)
     F = F_func(x(2:length(x)-1),t(i));
     f_right_side = CreateRightSide2(u(i,2:nx+1),lambda,g0(i),gL(i),F,deltaT);
 end
-  
+
 %checking against analytical solution
-[X,Y] = meshgrid(x,t);
-u_exact = sin(w*Y).*cos(k*X)
-figure;
-surf(X,Y,u_exact);
-xlabel('x'),ylabel('t');
-figure;
-surf(X,Y,u);
-xlabel('x'),ylabel('t');
+Analysis(X,Y,x,u,u_exact,nx);

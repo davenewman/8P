@@ -1,0 +1,21 @@
+function [L,D,T,F_func,f,w,k,x,t,deltaT,lambda,g0,gL,nx,nt] = Parameters()
+% This file holds parameters necessary to solve each problem
+% Definitions: 
+
+L = pi;                     % length of spacial domain
+D = 0.1;                    % diffusion coefficient
+T = 10;                     % total time interval
+w = 1;                      % parameter specific to problem 2
+k = 1;                      % wave number
+nx = 10;                    % number of points discretizing x
+nt = 10;                    % number of points discretizing t
+x = linspace(0,L,nx+2);     % spatial domain
+t = linspace(0,T,nt+2);     % time domain
+f = 0*ones(1,length(x));    % initial condition
+g0 = sin(w*t);              % left boundary condition
+gL = sin(w*t)*cos(k*L);     % right boundary condition
+                            % 
+F_func = @(x,t) (w*cos(w*t) + D*k^2*sin(w*t))*cos(k*x);
+
+
+
