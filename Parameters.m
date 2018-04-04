@@ -1,6 +1,5 @@
 function [L,D,T,F_func,f,w,k,x,t,deltaT,lambda,g0,gL,nx,nt,X,Y,u_exact] = Parameters()
 % This file holds parameters necessary to solve problem 1.
-% Definitions: 
 
 L = pi;                         % length of spacial domain
 D = 0.1;                        % diffusion coefficient
